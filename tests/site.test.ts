@@ -83,10 +83,10 @@ describe('Nexvanta.AI Comprehensive Specification Verification', () => {
     expect(paymentConfig.enableRazorpay).toBe(true);
     expect(paymentConfig.enableUpi).toBe(true);
     expect(paymentConfig.enableBankTransfer).toBe(true);
-    // UPI and bank values configured
+    // UPI configured, bank fields empty until owner updates
     expect(paymentConfig.upi.upiId).toBe('9713103152@upi');
-    expect(paymentConfig.bank.accountNumber).toBe('50200097131031');
-    expect(paymentConfig.bank.ifsc).toBe('HDFC0000123');
+    expect(paymentConfig.bank.accountNumber).toBe('');
+    expect(paymentConfig.bank.ifsc).toBe('');
     expect(paymentConfig.supportEmail).toBe('hello.nexvanta56@gmail.com');
     expect(paymentConfig.supportWhatsApp).toBe('919713103152');
   });

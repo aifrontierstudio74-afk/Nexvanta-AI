@@ -8,12 +8,12 @@ export const paymentConfig = {
     qrImage: "",
   },
   bank: {
-    accountHolderName: "Nexvanta.AI",
-    bankName: "HDFC Bank",
-    accountNumber: "50200097131031",
-    ifsc: "HDFC0000123",
-    branch: "Connaught Place, New Delhi",
-    accountType: "Current",
+    accountHolderName: "", // Owner will fill in real bank details
+    bankName: "",
+    accountNumber: "",
+    ifsc: "",
+    branch: "",
+    accountType: "", // Current / Savings
   },
   instructions: "After paying, submit your transaction/UTR number so we can confirm your order.",
   supportEmail: "hello.nexvanta56@gmail.com",
