@@ -251,3 +251,94 @@ Build production bundle:
 npm run build
 ```
 All commands pass with zero errors.
+
+---
+
+## 11. SaaS Platform Core — Non-Developer Owner Setup Guide
+
+Follow these steps to activate the multi-user SaaS foundation, automated billing, encrypted credentials vault, and admin portal.
+
+### 1. Supabase Setup (Database & Auth)
+1. Sign up / log into [Supabase](https://supabase.com) and click **New Project** (choose South Asia - Mumbai region).
+2. Open the **SQL Editor** in your Supabase dashboard:
+   - Run the migration file: `supabase/migrations/20261011000000_saas_platform_core.sql`
+   - Run the seed file: `supabase/seed.sql` (populates 15 tiered plans across all 5 automations)
+3. Under **Project Settings** → **API**, copy:
+   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
+   - Anon Public Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - Service Role Key → `SUPABASE_SERVICE_ROLE_KEY` (keep secret!)
+4. Under **Authentication** → **URL Configuration**:
+   - Set **Site URL** to `https://<your-domain>`
+   - Add **Redirect URL**: `https://<your-domain>/auth/callback` (and `http://localhost:3000/auth/callback` for testing)
+5. **Grant Admin Privileges**: Once you sign up with your email, go to the SQL Editor and execute:
+   ```sql
+   UPDATE public.profiles SET is_admin = true WHERE id = (SELECT id FROM auth.users WHERE email = 'your-email@example.com');
+   ```
+
+### 2. Razorpay Subscriptions & Webhook Setup
+1. Open the [Razorpay Dashboard](https://dashboard.razorpay.com) and switch to **Test Mode** (or Live Mode when launching).
+2. Under **Settings** → **API Keys**, get `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`.
+3. Under **Settings** → **Webhooks**, click **Add New Webhook**:
+   - Webhook URL: `https://<your-domain>/api/webhooks/razorpay`
+   - Secret: create a secret string and set it as `RAZORPAY_WEBHOOK_SECRET`
+   - Active Events: select:
+     - `subscription.activated`
+     - `subscription.charged`
+     - `subscription.pending`
+     - `subscription.halted`
+     - `subscription.cancelled`
+4. Register the 15 subscription plans automatically:
+   ```bash
+   npm run seed:razorpay-plans
+   ```
+   This script registers the plans in Razorpay and prints out the plan IDs to update into your `plans` table.
+
+### 3. Resend Setup (Transactional Emails)
+1. Sign up at [Resend](https://resend.com) and create an API Key.
+2. Set `RESEND_API_KEY="re_..."` in your environment.
+3. Verify your custom sending domain, or test with Resend's default onboarding address:
+   - Set `EMAIL_FROM="Nexvanta.AI <notifications@your-domain.com>"`
+
+### 4. Upstash Redis (Rate Limiting)
+1. Sign up at [Upstash](https://upstash.com) and create a Redis database.
+2. In the database details, copy **REST API**:
+   - `UPSTASH_REDIS_REST_URL="https://..."`
+   - `UPSTASH_REDIS_REST_TOKEN="..."`
+   *(Note: If omitted, the platform automatically falls back to an in-memory sliding window rate limiter).*
+
+### 5. Inngest Setup (Background Jobs & Crons)
+1. Sign up at [Inngest](https://inngest.com) and create an app:
+   - App URL: `https://<your-domain>/api/inngest`
+2. Copy `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` into your environment variables.
+
+### 6. AES-256 Encryption Key (Credentials Vault)
+Generate a cryptographically secure 32-byte encryption key for integration secrets:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+Paste the generated string into `CREDENTIAL_ENC_KEY`.
+
+### 7. AI Gateway Configuration
+Specify your preferred LLM provider for the automation pipelines:
+- `LLM_PROVIDER=anthropic` (or `openai`)
+- `LLM_MODEL=claude-3-5-sonnet-20241022`
+- `ANTHROPIC_API_KEY="..."` or `OPENAI_API_KEY="..."`
+
+---
+
+## 12. 10-Minute End-to-End Test (Zero Cost)
+
+1. **Sign Up**: Navigate to `/signup` and create a free user account.
+2. **Access App**: You will be redirected to `/app`. You will see all 5 automation cards locked with the active lock indicator.
+3. **Test the Demo Module**: Open `/app/demo-automation` — this interactive benchmark module has built-in entitlement and allows testing live LLM prompts, runs recording, and quota meters immediately.
+4. **Subscribe via Razorpay Test Card**: Go to `/saas/lead-capture-crm`, pick a plan, and proceed to checkout with a Razorpay test card.
+5. **Or Simulate a Webhook**:
+   ```bash
+   npm run simulate:webhook -- --subId=sub_test_123 --status=active
+   ```
+6. **Instant Unlock**: Return to `/app/lead-capture-crm`. The console is unlocked, displaying the Setup Wizard, Execution Runs table, and Quota meters.
+7. **Test Manual UPI / Bank Approval**:
+   - Go to `/app/checkout?plan=lead-capture-crm-basic`, select **Manual UPI / Bank Transfer**, enter a test UTR (e.g. `UTR1234567890`), and submit claim.
+   - Open `/admin/payments` with your admin user.
+   - Click **Approve**. The subscription activates immediately and sends a dark-gold confirmation receipt email to the user.
+

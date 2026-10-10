@@ -7,22 +7,30 @@
     "build": "node ./node_modules/next/dist/bin/next build",
     "start": "node ./node_modules/next/dist/bin/next start",
     "lint": "node ./node_modules/next/dist/bin/next lint",
-    "test": "node ./node_modules/vitest/vitest.mjs run"
+    "test": "node ./node_modules/vitest/vitest.mjs run",
+    "test:e2e": "node ./node_modules/@playwright/test/cli.js test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.39.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.9",
+    "inngest": "^4.23.0",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "razorpay": "^2.9.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "resend": "^6.32.1",
     "tailwind-merge": "^2.5.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@types/node": "^20.16.11",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
