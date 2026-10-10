@@ -1,5 +1,5 @@
 const SHEET_NAME = 'Leads';
-const SECRET = 'CHANGE_THIS_SECRET'; // must equal GOOGLE_SHEET_SECRET
+const SECRET = 'nx_crm_secret_nexvanta2026'; // must equal GOOGLE_SHEET_SECRET in .env.local
 const NOTIFY_EMAIL = 'hello.nexvanta56@gmail.com';
 const HEADERS = ['Lead ID','Timestamp (IST)','Name','Industry','Phone','Email','Company',
   'Lead Status','Segment','Interested In','Source','Message / Notes','Page URL',

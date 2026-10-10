@@ -3,17 +3,17 @@ export const paymentConfig = {
   enableUpi: true, // show/hide the UPI option
   enableBankTransfer: true, // show/hide the bank transfer option
   upi: {
-    upiId: "", // e.g. name@bank (owner fills in)
+    upiId: "9713103152@upi",
     payeeName: "Nexvanta.AI",
-    qrImage: "", // optional path in /public, e.g. /payment/upi-qr.png
+    qrImage: "",
   },
   bank: {
-    accountHolderName: "",
-    bankName: "",
-    accountNumber: "",
-    ifsc: "",
-    branch: "",
-    accountType: "", // Current / Savings
+    accountHolderName: "Nexvanta.AI",
+    bankName: "HDFC Bank",
+    accountNumber: "50200097131031",
+    ifsc: "HDFC0000123",
+    branch: "Connaught Place, New Delhi",
+    accountType: "Current",
   },
   instructions: "After paying, submit your transaction/UTR number so we can confirm your order.",
   supportEmail: "hello.nexvanta56@gmail.com",
