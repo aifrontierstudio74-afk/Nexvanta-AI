@@ -71,12 +71,24 @@ describe('Nexvanta.AI Comprehensive Specification Verification', () => {
     });
   });
 
-  it('verifies digital products placeholder at ₹99', () => {
-    expect(digitalProducts.length).toBeGreaterThanOrEqual(1);
-    const placeholder = digitalProducts.find((p) => p.slug === 'your-digital-product');
-    expect(placeholder).toBeDefined();
-    expect(placeholder?.price).toBe(99);
-    expect(placeholder?.isActive).toBe(true);
+  it('verifies 3 digital products catalog at ₹99 with Drive download links', () => {
+    const activeProducts = digitalProducts.filter((p) => p.isActive);
+    expect(activeProducts).toHaveLength(3);
+
+    const vault = activeProducts.find((p) => p.slug === 'ai-writing-prompt-vault');
+    expect(vault).toBeDefined();
+    expect(vault?.price).toBe(99);
+    expect(vault?.fileUrl).toContain('drive.google.com');
+
+    const blueprint = activeProducts.find((p) => p.slug === 'make-lead-responder-blueprint');
+    expect(blueprint).toBeDefined();
+    expect(blueprint?.price).toBe(99);
+    expect(blueprint?.fileUrl).toContain('drive.google.com');
+
+    const secondBrain = activeProducts.find((p) => p.slug === 'notion-ai-second-brain');
+    expect(secondBrain).toBeDefined();
+    expect(secondBrain?.price).toBe(99);
+    expect(secondBrain?.fileUrl).toContain('drive.google.com');
   });
 
   it('verifies payment configuration schema and empty defaults', () => {
